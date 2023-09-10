@@ -21,34 +21,29 @@ export function AuthProvider({ children }) {
 		checkAuth()
 	}, [])
 
-	function checkAuth() {
-		if (authToken) {
-			setIsAuthenticated(true)
-		} else {
+	const checkAuth = () => {
+		if (authToken) setIsAuthenticated(true)
+
+		if (!authToken) {
 			const token = getRefreshToken()
 			if (token) {
 				const user = GetUserData(token)
-				console.log(user)
 				const userData = { user, token }
 				saveUser(userData)
 			}
 		}
 	}
 
-	function getAuthToken() {
-		return authToken
-	}
+	const getAuthToken = () => authToken
+	const getUser = () => user
 
-	function getRefreshToken() {
+	const getRefreshToken = () => {
 		const token = cookies.auth_token
-		console.log(token)
-		console.log('aaaa')
 		if (token) return token
-
 		return null
 	}
 
-	function saveUser(userData) {
+	const saveUser = userData => {
 		setAuthToken(userData.token)
 		setUser(userData.user)
 		setCookie('auth_token', userData.token, {
@@ -57,11 +52,8 @@ export function AuthProvider({ children }) {
 		})
 		setIsAuthenticated(true)
 	}
-	function getUser() {
-		return user
-	}
 
-	function logout() {
+	const logout = () => {
 		removeCookie('auth_token')
 		setIsAuthenticated(false)
 		setUser('')

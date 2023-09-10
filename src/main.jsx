@@ -9,7 +9,6 @@ import NotFound from './pages/NotFound'
 
 import ProtectedRoute from './layouts/ProtectedRoute'
 import { AuthProvider } from './auth/AuthProvider'
-import { CookiesProvider } from 'react-cookie'
 
 const router = createHashRouter([
 	{
@@ -38,8 +37,6 @@ const router = createHashRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<AuthProvider>
-		<CookiesProvider defaultSetOptions={{ path: '/' }}>
-			<RouterProvider router={router} />
-		</CookiesProvider>
+		<RouterProvider router={router} />
 	</AuthProvider>,
 )
