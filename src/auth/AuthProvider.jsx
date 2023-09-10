@@ -1,5 +1,6 @@
 import { useContext, createContext, useState, useEffect } from 'react'
 import GetUserData from './DecodeToken'
+import { useCookies } from 'react-cookie'
 
 const AuthContext = createContext({
 	isAuthenticated: false,
@@ -14,6 +15,7 @@ export function AuthProvider({ children }) {
 	const [isAuthenticated, setIsAuthenticated] = useState(false)
 	const [authToken, setAuthToken] = useState('')
 	const [user, setUser] = useState('')
+	const [cookies, setCookie, removeCookie] = useCookies(['auth_token'])
 
 	useEffect(() => {
 		checkAuth()
@@ -26,6 +28,7 @@ export function AuthProvider({ children }) {
 			const token = getRefreshToken()
 			if (token) {
 				const user = GetUserData(token)
+				console.log(user)
 				const userData = { user, token }
 				saveUser(userData)
 			}
@@ -37,18 +40,21 @@ export function AuthProvider({ children }) {
 	}
 
 	function getRefreshToken() {
-		const token = localStorage.getItem('auth_token')
-		if (token) {
-			const refreshToken = JSON.parse(token)
-			return refreshToken
-		}
+		const token = cookies.auth_token
+		console.log(token)
+		console.log('aaaa')
+		if (token) return token
+
 		return null
 	}
 
 	function saveUser(userData) {
 		setAuthToken(userData.token)
 		setUser(userData.user)
-		localStorage.setItem('auth_token', JSON.stringify(userData.token))
+		setCookie('auth_token', userData.token, {
+			path: '/',
+			maxAge: 14400,
+		})
 		setIsAuthenticated(true)
 	}
 	function getUser() {
@@ -56,7 +62,7 @@ export function AuthProvider({ children }) {
 	}
 
 	function logout() {
-		localStorage.removeItem('auth_token')
+		removeCookie('auth_token')
 		setIsAuthenticated(false)
 		setUser('')
 		setAuthToken('')

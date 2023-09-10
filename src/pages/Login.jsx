@@ -22,7 +22,8 @@ export default function Login() {
 
 	const handlerSubmit = async e => {
 		e.preventDefault()
-		const token = false
+		const token =
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6ImNyaXN0IiwibGFzdG5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwidHlwZSI6MSwiY3VzdG9tZXJJZCI6bnVsbCwiaWF0IjoxNjk0MzgzMDQ2LCJleHAiOjE2OTQ0Njk0NDZ9.4GGXIzSN-tmaGyPLh0ziVxpIJ9fxXUlf7RgpZldTjbQ'
 		if (token) {
 			const user = GetUserData(token)
 			const userData = { token, user }
