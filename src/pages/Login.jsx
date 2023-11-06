@@ -1,5 +1,7 @@
 import { Toaster, toast } from 'sonner'
 
+import { Link } from 'react-router-dom'
+
 import { useState } from 'react'
 
 import { useAuth } from '../auth/AuthProvider'
@@ -92,14 +94,11 @@ export default function Login() {
 							</button>
 						</div>
 						<div className="text-sm text-center">
-							<a
-								href="#"
-								onClick={() => {
-									alert('Contacta con soporte')
-								}}
+							<Link
+								to="/register"
 								className="font-semibold text-blue-700 hover:text-indigo-500">
-								Olvidé mi Contraseña
-							</a>
+								Registrarme
+							</Link>
 						</div>
 					</form>
 

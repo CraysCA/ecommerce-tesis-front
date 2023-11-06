@@ -6,6 +6,7 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Logout from './pages/Logout'
 import NotFound from './pages/NotFound'
+import Register from './pages/Register'
 
 import ProtectedRoute from './layouts/ProtectedRoute'
 import { AuthProvider } from './auth/AuthProvider'
@@ -20,15 +21,23 @@ const router = createHashRouter([
 		element: <Logout />,
 	},
 	{
-		path: '/',
-		element: <ProtectedRoute />,
-		children: [
-			{
-				path: '/dashboard',
-				element: <Dashboard />,
-			},
-		],
+		path: '/register',
+		element: <Register />,
 	},
+	{
+		path: '/dashboard',
+		element: <Dashboard />,
+	},
+	// {
+	// 	path: '/',
+	// 	element: <ProtectedRoute />,
+	// 	children: [
+	// 		{
+	// 			path: '/dashboard',
+	// 			element: <Dashboard />,
+	// 		},
+	// 	],
+	// },
 	{
 		path: '*',
 		element: <NotFound />,
