@@ -1,5 +1,11 @@
 import { Link, useLocation } from 'react-router-dom'
-import { IconHome, IconTruckReturn } from '@tabler/icons-react'
+import {
+	IconHome,
+	IconTruckReturn,
+	IconShoppingCart,
+	IconShoppingBag,
+	IconUserCircle,
+} from '@tabler/icons-react'
 
 const sidebarMenu = [
 	{
@@ -24,7 +30,7 @@ export const Navbar = () => {
 	const currentPath = location.pathname
 	return (
 		<div>
-			<header className="bg-[#9db3ed] sticky left-0 top-0 h-30 w-full text-white">
+			<header className="bg-white sticky left-0 top-0 h-30 w-full text-black shadow-sm">
 				<ul className="flex flex-row items-center justify-center gap-4 pl-4">
 					<h1 className="text-2xl font-bold text-center my-5 flex flex-grow basis-0 cursor-pointer text-blue-800">
 						VITAL<span className=" text-red-500">CLINIC</span>
@@ -46,7 +52,7 @@ export const Navbar = () => {
 								type="search"
 								id="default-search"
 								className="block w-full p-3 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-								placeholder="Buscar cosas"
+								placeholder="Buscar producto"
 								required
 							/>
 							<button
@@ -56,16 +62,24 @@ export const Navbar = () => {
 							</button>
 						</div>
 					</form>
-					<nav className="flex flex-row items-center justify-center  gap-4  flex-grow basis-0 ">
-						<li>
-							<Link to="#"> cuenta</Link>
-						</li>
-						<li>
-							<Link to="#"> pedidos</Link>
-						</li>
-						<li>
-							<Link to="#"> otra cosa</Link>
-						</li>
+					<nav className="flex flex-row items-center justify-center  gap-2  flex-grow basis-0 ">
+						<Link
+							to="#"
+							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer">
+							<IconUserCircle width={28} height={28} />
+						</Link>
+
+						<Link
+							to="#"
+							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer">
+							<IconShoppingBag width={28} height={28} />
+						</Link>
+
+						<Link
+							to="#"
+							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer">
+							<IconShoppingCart width={28} height={28} />
+						</Link>
 					</nav>
 				</ul>
 			</header>
