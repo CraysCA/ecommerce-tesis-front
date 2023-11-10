@@ -1,8 +1,43 @@
 import { Navbar } from '../components/Navbar'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { CartContext } from '../context/ShoppingCartContext'
 
 export default function Dashboard() {
+	const [cart, setCart] = useContext(CartContext)
 	const [products, setProducts] = useState([])
+
+	const addToCart = id => {
+		setCart(currentProducts => {
+			console.log(currentProducts)
+			const isProductsFound = currentProducts.find(product => product.id === id)
+			if (isProductsFound) {
+				return currentProducts.map(product => {
+					if (product.id === id)
+						return { ...product, quantity: product.quantity + 1 }
+
+					return product
+				})
+			} else {
+				return [...currentProducts, { id, quantity: 1 }]
+			}
+		})
+	}
+
+	const removeProduct = id => {
+		setCart(currentProducts => {
+			if (currentProducts.find(product => product.id === id)?.quantity === 1) {
+				return currentProducts.filter(product => product.id !== id)
+			} else {
+				return currentProducts.map(product => {
+					if (product.id === id) {
+						return { ...product, quantity: product.quantity - 1 }
+					} else {
+						return product
+					}
+				})
+			}
+		})
+	}
 
 	useEffect(() => {
 		fetch(`https://tesis-backend-dev-fxdg.1.us-1.fl0.io/products/`, {
@@ -18,7 +53,6 @@ export default function Dashboard() {
 			.then(res => res.json())
 			.then(data => setProducts(data.success && data.data ? data.data : []))
 	})
-	console.log(products)
 
 	return (
 		<>
@@ -29,7 +63,7 @@ export default function Dashboard() {
 					<div
 						key={product.id}
 						className="w-full bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 max-w-[240px] max-h-[370px]">
-						<a href="#">
+						<div>
 							<img
 								className="rounded-t-lg object-contain"
 								src={product.img}
@@ -47,13 +81,13 @@ export default function Dashboard() {
 										{product.price} VES
 									</span>
 								</div>
-								<a
-									href="#"
-									className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">
+								<button
+									className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+									onClick={() => addToCart(product.id)}>
 									Añadir al carrito
-								</a>
+								</button>
 							</div>
-						</a>
+						</div>
 					</div>
 				))}
 			</section>

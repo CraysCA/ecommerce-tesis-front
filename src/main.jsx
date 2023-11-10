@@ -10,6 +10,8 @@ import Register from './pages/Register'
 
 import ProtectedRoute from './layouts/ProtectedRoute'
 import { AuthProvider } from './auth/AuthProvider'
+import ShoppingCartProvider from './context/ShoppingCartContext'
+import ShoppingCart from './pages/ShoppingCart'
 
 const router = createHashRouter([
 	{
@@ -23,6 +25,10 @@ const router = createHashRouter([
 	{
 		path: '/register',
 		element: <Register />,
+	},
+	{
+		path: '/shopping-cart',
+		element: <ShoppingCart />,
 	},
 	{
 		path: '/dashboard',
@@ -46,6 +52,8 @@ const router = createHashRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<AuthProvider>
-		<RouterProvider router={router} />
+		<ShoppingCartProvider>
+			<RouterProvider router={router} />
+		</ShoppingCartProvider>
 	</AuthProvider>,
 )

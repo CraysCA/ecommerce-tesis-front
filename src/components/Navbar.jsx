@@ -6,6 +6,8 @@ import {
 	IconShoppingBag,
 	IconUserCircle,
 } from '@tabler/icons-react'
+import { useContext } from 'react'
+import { CartContext } from '../context/ShoppingCartContext'
 
 const sidebarMenu = [
 	{
@@ -26,6 +28,10 @@ const sidebarMenu = [
 ]
 
 export const Navbar = () => {
+	const [cart, setCart] = useContext(CartContext)
+
+	const quantity = cart.reduce((acc, item) => acc + item.quantity, 0)
+
 	const location = useLocation()
 	const currentPath = location.pathname
 	return (
@@ -76,9 +82,10 @@ export const Navbar = () => {
 						</Link>
 
 						<Link
-							to="#"
+							to="/shopping-cart"
 							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer">
 							<IconShoppingCart width={28} height={28} />
+							{quantity}
 						</Link>
 					</nav>
 				</ul>
