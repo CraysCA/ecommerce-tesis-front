@@ -76,16 +76,22 @@ export const Navbar = () => {
 						</Link>
 
 						<Link
-							to="#"
+							to="/dashboard"
 							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer">
 							<IconShoppingBag width={28} height={28} />
 						</Link>
 
 						<Link
 							to="/shopping-cart"
-							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer">
+							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer  relative inline-flex items-center">
 							<IconShoppingCart width={28} height={28} />
-							{quantity}
+							{quantity === 0 ? (
+								''
+							) : (
+								<div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-blue-700 border-2 border-white rounded-full -top-1 -end-1">
+									{quantity}
+								</div>
+							)}
 						</Link>
 					</nav>
 				</ul>

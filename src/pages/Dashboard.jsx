@@ -4,37 +4,40 @@ import { CartContext } from '../context/ShoppingCartContext'
 
 export default function Dashboard() {
 	const [cart, setCart] = useContext(CartContext)
-	const [products, setProducts] = useState([])
+	if (cart.length > 0) localStorage.setItem('cart', JSON.stringify(cart))
 
-	const addToCart = id => {
+	const [products, setProducts] = useState([])
+	const [search, setSearch] = useState('')
+
+	const handlerSearch = e => {
+		setSearch(e.target.value)
+	}
+
+	let results = []
+
+	if (!search) {
+		results = products
+	} else {
+		results = products.filter(data =>
+			data.name.toLowerCase().includes(search.toLocaleLowerCase()),
+		)
+	}
+
+	const addToCart = newProduct => {
 		setCart(currentProducts => {
-			console.log(currentProducts)
-			const isProductsFound = currentProducts.find(product => product.id === id)
+			const isProductsFound = currentProducts.find(
+				product => product.id === newProduct.id,
+			)
+
 			if (isProductsFound) {
 				return currentProducts.map(product => {
-					if (product.id === id)
+					if (product.id === newProduct.id)
 						return { ...product, quantity: product.quantity + 1 }
 
 					return product
 				})
 			} else {
-				return [...currentProducts, { id, quantity: 1 }]
-			}
-		})
-	}
-
-	const removeProduct = id => {
-		setCart(currentProducts => {
-			if (currentProducts.find(product => product.id === id)?.quantity === 1) {
-				return currentProducts.filter(product => product.id !== id)
-			} else {
-				return currentProducts.map(product => {
-					if (product.id === id) {
-						return { ...product, quantity: product.quantity - 1 }
-					} else {
-						return product
-					}
-				})
+				return [...currentProducts, { ...newProduct, quantity: 1 }]
 			}
 		})
 	}
@@ -58,8 +61,9 @@ export default function Dashboard() {
 		<>
 			<Navbar />
 			<h1>Products</h1>
+
 			<section className="flex gap-3 p-6 flex-row flex-wrap">
-				{products.map(product => (
+				{results.map(product => (
 					<div
 						key={product.id}
 						className="w-full bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 max-w-[240px] max-h-[370px]">
@@ -83,7 +87,7 @@ export default function Dashboard() {
 								</div>
 								<button
 									className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-									onClick={() => addToCart(product.id)}>
+									onClick={() => addToCart(product)}>
 									Añadir al carrito
 								</button>
 							</div>
