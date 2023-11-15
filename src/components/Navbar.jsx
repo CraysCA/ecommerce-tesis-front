@@ -94,6 +94,7 @@ export const Navbar = () => {
 					<nav className="flex flex-row items-center justify-center  gap-2  flex-grow basis-0 ">
 						<Link
 							//onClick={validLogout}
+
 							to={auth.isAuthenticated ? '/logout' : '/login'}
 							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer flex items-center gap-2">
 							<IconUserCircle width={28} height={28} />
