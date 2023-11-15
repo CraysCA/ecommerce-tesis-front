@@ -1,10 +1,11 @@
 import { Toaster, toast } from 'sonner'
-import { Link } from 'react-router-dom'
-
+import { Link, Navigate } from 'react-router-dom'
 import { useState } from 'react'
 
+import { fetchLogin } from '../api/fetchLogin'
+import { fetchRegister } from '../api/fetchRegister'
+
 import { useAuth } from '../auth/AuthProvider'
-import { Navigate } from 'react-router-dom'
 import GetUserData from '../auth/DecodeToken'
 
 export default function Register() {
@@ -15,7 +16,7 @@ export default function Register() {
 
 	const auth = useAuth()
 
-	if (auth.isAuthenticated) return <Navigate to="/dashboard" replace={true} />
+	if (auth.isAuthenticated) return <Navigate to="/" replace={true} />
 
 	const handlerChange = e => {
 		setCredentials({ ...credentials, [e.target.name]: e.target.value })
@@ -23,17 +24,35 @@ export default function Register() {
 
 	const handlerSubmit = async e => {
 		e.preventDefault()
-		const token =
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6ImNyaXN0IiwibGFzdG5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwidHlwZSI6MSwiY3VzdG9tZXJJZCI6bnVsbCwiaWF0IjoxNjk0MzgzMDQ2LCJleHAiOjE2OTQ0Njk0NDZ9.4GGXIzSN-tmaGyPLh0ziVxpIJ9fxXUlf7RgpZldTjbQ'
-		if (token) {
-			const user = GetUserData(token)
-			const userData = { token, user }
+		credentials.type = 3
+		const userCreated = await fetchRegister(credentials)
+		console.log(userCreated)
 
-			auth.saveUser(userData)
+		if (userCreated?.user?.id) {
+			const loginUser = {
+				email: credentials.email,
+				password: credentials.password,
+			}
+			toast.promise(fetchLogin(loginUser), {
+				loading: 'Creando...',
+				success: token => {
+					if (token) {
+						const user = GetUserData(token)
+						const userData = { token, user }
 
-			return <Navigate to="/dashboard" replace={true} />
+						auth.saveUser(userData)
+
+						return <Navigate to="/" replace={true} />
+					} else {
+						toast.error('No se pudo iniciar sesión')
+					}
+				},
+				error: 'No se pudo crear el usuario',
+			})
+		} else if (userCreated.message === 'the email already exist') {
+			toast.error('El correo electrónico ya existe')
 		} else {
-			toast.error('Correo o contraseña incorrectos')
+			toast.error('No se pudo crear el usuario')
 		}
 	}
 
@@ -69,16 +88,16 @@ export default function Register() {
 							</div>
 							<div>
 								<label
-									htmlFor="apellido"
+									htmlFor="lastname"
 									className="block text-sm font-medium leading-6 text-gray-900">
 									Apellido
 								</label>
 								<div className="mt-2">
 									<input
 										onChange={handlerChange}
-										id="apellido"
-										name="apellido"
-										type="apellido"
+										id="lastname"
+										name="lastname"
+										type="lastname"
 										required
 										className="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-700 sm:text-sm sm:leading-6 outline-none transition-all duration-500 "
 									/>
@@ -150,7 +169,7 @@ export default function Register() {
 					</form>
 				</div>
 			</div>
-			<Toaster />
+			<Toaster richColors />
 		</main>
 	)
 }

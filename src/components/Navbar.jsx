@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, Navigate } from 'react-router-dom'
 import {
 	IconHome,
 	IconTruckReturn,
@@ -8,12 +8,13 @@ import {
 } from '@tabler/icons-react'
 import { useContext } from 'react'
 import { CartContext } from '../context/ShoppingCartContext'
+import { useAuth } from '../auth/AuthProvider'
 
 const sidebarMenu = [
 	{
 		name: 'home',
 		src: <IconHome width={33} height={33} />,
-		to: '/dashboard',
+		to: '/',
 	},
 	{
 		name: 'order',
@@ -28,6 +29,25 @@ const sidebarMenu = [
 ]
 
 export const Navbar = () => {
+	const auth = useAuth()
+	const user = auth.getUser()
+
+	const checkAuth = e => {
+		if (!auth.isAuthenticated) {
+			e.preventDefault()
+			alert('necesitas iniciar sesión')
+		}
+	}
+
+	const validLogout = e => {
+		if (auth.isAuthenticated) {
+			e.preventDefault()
+			const text = 'Desea cerrar sesión?'
+			console.log(confirm(text))
+			if (confirm(text) == true) return true
+		}
+	}
+
 	const [cart, setCart] = useContext(CartContext)
 
 	const quantity = cart.reduce((acc, item) => acc + item.quantity, 0)
@@ -37,10 +57,13 @@ export const Navbar = () => {
 	return (
 		<div>
 			<header className="bg-white sticky left-0 top-0 h-30 w-full text-black shadow-sm">
-				<ul className="flex flex-row items-center justify-center gap-4 pl-4">
-					<h1 className="text-2xl font-bold text-center my-5 flex flex-grow basis-0 cursor-pointer text-blue-800">
-						VITAL<span className=" text-red-500">CLINIC</span>
-					</h1>
+				<ul className="flex flex-row items-center justify-center gap-4 pl-4 ">
+					<Link to="/" className="flex-grow basis-0">
+						<h1 className="text-2xl font-bold text-center my-5 flex flex-grow basis-0 cursor-pointer text-blue-800">
+							VITAL<span className=" text-red-500">CLINIC</span>
+						</h1>
+					</Link>
+
 					<form className="flex-grow basis-0">
 						<div className="relative">
 							<div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -70,19 +93,26 @@ export const Navbar = () => {
 					</form>
 					<nav className="flex flex-row items-center justify-center  gap-2  flex-grow basis-0 ">
 						<Link
-							to="#"
-							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer">
+							//onClick={validLogout}
+							to={auth.isAuthenticated ? '/logout' : '/login'}
+							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer flex items-center gap-2">
 							<IconUserCircle width={28} height={28} />
+							{auth.isAuthenticated ? (
+								<p> Hola, {user.name} </p>
+							) : (
+								'Iniciar Sesión'
+							)}
 						</Link>
 
 						<Link
-							to="/dashboard"
+							to="/"
 							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer">
 							<IconShoppingBag width={28} height={28} />
 						</Link>
 
 						<Link
 							to="/shopping-cart"
+							onClick={checkAuth}
 							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer  relative inline-flex items-center">
 							<IconShoppingCart width={28} height={28} />
 							{quantity === 0 ? (

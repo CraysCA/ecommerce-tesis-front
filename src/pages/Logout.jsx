@@ -4,5 +4,5 @@ export default function Logout() {
 	const auth = useAuth()
 	auth.logout()
 
-	return <Navigate to="/login" />
+	return <Navigate to="/" />
 }

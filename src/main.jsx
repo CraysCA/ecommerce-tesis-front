@@ -3,7 +3,7 @@ import { RouterProvider, createHashRouter } from 'react-router-dom'
 import './index.css'
 
 import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
+import MainHub from './pages/MainHub'
 import Logout from './pages/Logout'
 import NotFound from './pages/NotFound'
 import Register from './pages/Register'
@@ -14,6 +14,10 @@ import ShoppingCartProvider from './context/ShoppingCartContext'
 import ShoppingCart from './pages/ShoppingCart'
 
 const router = createHashRouter([
+	{
+		path: '/',
+		element: <MainHub />,
+	},
 	{
 		path: '/login',
 		element: <Login />,
@@ -29,10 +33,6 @@ const router = createHashRouter([
 	{
 		path: '/shopping-cart',
 		element: <ShoppingCart />,
-	},
-	{
-		path: '/dashboard',
-		element: <Dashboard />,
 	},
 	// {
 	// 	path: '/',

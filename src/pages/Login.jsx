@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useAuth } from '../auth/AuthProvider'
 import { Navigate } from 'react-router-dom'
 import GetUserData from '../auth/DecodeToken'
+import { fetchLogin } from '../api/fetchLogin'
 
 export default function Login() {
 	const [credentials, setCredentials] = useState({
@@ -16,7 +17,7 @@ export default function Login() {
 
 	const auth = useAuth()
 
-	if (auth.isAuthenticated) return <Navigate to="/dashboard" replace={true} />
+	if (auth.isAuthenticated) return <Navigate to="/" replace={true} />
 
 	const handlerChange = e => {
 		setCredentials({ ...credentials, [e.target.name]: e.target.value })
@@ -24,18 +25,23 @@ export default function Login() {
 
 	const handlerSubmit = async e => {
 		e.preventDefault()
-		const token =
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6ImNyaXN0IiwibGFzdG5hbWUiOiJ0ZXN0IiwiZW1haWwiOiJ0ZXN0QHRlc3QuY29tIiwidHlwZSI6MSwiY3VzdG9tZXJJZCI6bnVsbCwiaWF0IjoxNjk0MzgzMDQ2LCJleHAiOjE2OTQ0Njk0NDZ9.4GGXIzSN-tmaGyPLh0ziVxpIJ9fxXUlf7RgpZldTjbQ'
-		if (token) {
-			const user = GetUserData(token)
-			const userData = { token, user }
 
-			auth.saveUser(userData)
+		toast.promise(fetchLogin(credentials), {
+			loading: 'Iniciando Sesión...',
+			success: token => {
+				if (token) {
+					const user = GetUserData(token)
+					const userData = { token, user }
 
-			return <Navigate to="/dashboard" replace={true} />
-		} else {
-			toast.error('Correo o contraseña incorrectos')
-		}
+					auth.saveUser(userData)
+
+					return <Navigate to="/" replace={true} />
+				} else {
+					toast.error('No se pudo iniciar sesión')
+				}
+			},
+			error: 'Correo o contraseña incorrectos',
+		})
 	}
 
 	return (
@@ -112,7 +118,7 @@ export default function Login() {
 					</p> */}
 				</div>
 			</div>
-			<Toaster />
+			<Toaster richColors />
 		</main>
 	)
 }
