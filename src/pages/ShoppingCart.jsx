@@ -1,10 +1,17 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { Navbar } from '../components/Navbar'
 import { CartContext } from '../context/ShoppingCartContext'
+import { v4 as uuid } from 'uuid'
+import { useAuth } from '../auth/AuthProvider'
+import { fetchCreateInvoice } from '../api/fetchCreateInvoice'
 
 export default function ShoppingCart() {
 	const [cart, setCart] = useContext(CartContext)
 	if (cart.length > 0) localStorage.setItem('cart', JSON.stringify(cart))
+	const [redirect, setRedirect] = useState(false)
+
+	const auth = useAuth()
+	const user = auth.getUser()
 
 	const quantity = cart.reduce((acc, item) => acc + item.quantity, 0)
 
@@ -55,6 +62,26 @@ export default function ShoppingCart() {
 		})
 	}
 
+	const createInvoice = async () => {
+		const invoiceData = {
+			orderId: uuid(),
+			status: 'procesando',
+			userId: user.id,
+			products: cart.map(product => {
+				return {
+					id: product.id,
+					quantity: product.quantity,
+				}
+			}),
+		}
+		const invoice = await fetchCreateInvoice(invoiceData)
+		if (invoice.success) {
+			localStorage.setItem('cart', JSON.stringify([]))
+		} else {
+			return <h1>error</h1>
+		}
+	}
+
 	return (
 		<main>
 			<Navbar />
@@ -103,7 +130,9 @@ export default function ShoppingCart() {
 
 				<div>precio total: {totalPrice} VES</div>
 
-				<button className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+				<button
+					onClick={createInvoice}
+					className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
 					Pagar
 				</button>
 			</section>
