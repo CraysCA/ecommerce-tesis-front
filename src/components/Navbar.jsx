@@ -32,13 +32,6 @@ export const Navbar = () => {
 	const auth = useAuth()
 	const user = auth.getUser()
 
-	const checkAuth = e => {
-		if (!auth.isAuthenticated) {
-			e.preventDefault()
-			alert('necesitas iniciar sesión')
-		}
-	}
-
 	const validLogout = e => {
 		if (auth.isAuthenticated) {
 			e.preventDefault()
@@ -58,7 +51,7 @@ export const Navbar = () => {
 		<div>
 			<header className="bg-white sticky left-0 top-0 h-30 w-full text-black shadow-sm">
 				<ul className="flex flex-row items-center justify-center gap-4 pl-4 ">
-					<Link to="/" className="flex-grow basis-0">
+					<Link to="/" title="inicio" className="flex-grow basis-0">
 						<h1 className="text-2xl font-bold text-center my-5 flex flex-grow basis-0 cursor-pointer text-blue-800">
 							VITAL<span className=" text-red-500">CLINIC</span>
 						</h1>
@@ -96,6 +89,7 @@ export const Navbar = () => {
 							//onClick={validLogout}
 
 							to={auth.isAuthenticated ? '/logout' : '/login'}
+							title={auth.isAuthenticated ? 'Cerrar Sesión' : 'Iniciar Sesión'}
 							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer flex items-center gap-2">
 							<IconUserCircle width={28} height={28} />
 							{auth.isAuthenticated ? (
@@ -106,14 +100,15 @@ export const Navbar = () => {
 						</Link>
 
 						<Link
-							to="/"
+							to="/orders-history"
+							title="Historial de Pedidos"
 							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer">
 							<IconShoppingBag width={28} height={28} />
 						</Link>
 
 						<Link
 							to="/shopping-cart"
-							onClick={checkAuth}
+							title="Carrito"
 							className="p-3 rounded-sm hover:bg-gray-200 cursor-pointer  relative inline-flex items-center">
 							<IconShoppingCart width={28} height={28} />
 							{quantity === 0 ? (

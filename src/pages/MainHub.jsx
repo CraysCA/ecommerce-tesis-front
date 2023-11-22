@@ -71,16 +71,17 @@ export default function MainHub() {
 								className="rounded-t-lg object-contain"
 								src={product.img}
 								alt={product.name}
+								title={product.name}
 								loading="lazy"
 							/>
 
 							<div className="px-5 pb-5 pt-1 flex flex-col gap-1">
 								<h5 className="text-xl font-semibold tracking-tight text-gray-900 truncate ">
-									{product.name}
+									<u>{product.name}</u>
 								</h5>
 
 								<div className="flex items-center justify-between">
-									<span className="text-2xl font-bold text-gray-900 ">
+									<span className="text-2xl font-bold  text-blue-800">
 										{product.price} VES
 									</span>
 								</div>

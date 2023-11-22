@@ -12,6 +12,7 @@ import ProtectedRoute from './layouts/ProtectedRoute'
 import { AuthProvider } from './auth/AuthProvider'
 import ShoppingCartProvider from './context/ShoppingCartContext'
 import ShoppingCart from './pages/ShoppingCart'
+import OrdersHistory from './pages/OrdersHistory'
 
 const router = createHashRouter([
 	{
@@ -31,19 +32,19 @@ const router = createHashRouter([
 		element: <Register />,
 	},
 	{
-		path: '/shopping-cart',
-		element: <ShoppingCart />,
+		path: '/',
+		element: <ProtectedRoute />,
+		children: [
+			{
+				path: '/shopping-cart',
+				element: <ShoppingCart />,
+			},
+			{
+				path: '/orders-history',
+				element: <OrdersHistory />,
+			},
+		],
 	},
-	// {
-	// 	path: '/',
-	// 	element: <ProtectedRoute />,
-	// 	children: [
-	// 		{
-	// 			path: '/dashboard',
-	// 			element: <Dashboard />,
-	// 		},
-	// 	],
-	// },
 	{
 		path: '*',
 		element: <NotFound />,
