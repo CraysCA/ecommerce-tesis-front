@@ -13,6 +13,7 @@ import { AuthProvider } from './auth/AuthProvider'
 import ShoppingCartProvider from './context/ShoppingCartContext'
 import ShoppingCart from './pages/ShoppingCart'
 import OrdersHistory from './pages/OrdersHistory'
+import ThanksYou from './pages/ThanksYou'
 
 const router = createHashRouter([
 	{
@@ -30,6 +31,10 @@ const router = createHashRouter([
 	{
 		path: '/register',
 		element: <Register />,
+	},
+	{
+		path: 'processing',
+		element: <ThanksYou />,
 	},
 	{
 		path: '/',
